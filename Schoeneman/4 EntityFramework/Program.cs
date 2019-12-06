@@ -45,7 +45,10 @@ namespace Schoeneman_EntityFramework
 			// services collection. Then set up our options for injection.
 			// the call to AddDbContext in our ConfigureServices method will release/dispose it when its out of scope
 			services.AddDbContext<SampleDbContext>(opts =>
-				opts.UseSqlServer(config.GetConnectionString("Storage")));
+				opts.UseSqlServer(config.GetConnectionString("Storage"))
+				//// or add nuget pkg Microsoft.EntityFrameworkCore.InMemory
+				//opts.UseInMemoryDatabase(databaseName: "database")
+				);
 
 			// IMPORTANT! Register our application entry point
 			services.AddTransient<ConsoleApplication>();
