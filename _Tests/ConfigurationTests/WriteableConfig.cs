@@ -27,9 +27,9 @@ namespace ConfigurationTests
 		public void initGetConfig()
 		{
 			config = new ConfigurationBuilder()
-				   .SetBasePath(Directory.GetCurrentDirectory())
-				   .AddJsonFile(file, optional: false, reloadOnChange: true)
-				   .Build();
+				.SetBasePath(Directory.GetCurrentDirectory())
+				.AddJsonFile(file, optional: false, reloadOnChange: true)
+				.Build();
 		}
 
 		// update-able config file. uses IOptions pattern
@@ -54,7 +54,7 @@ namespace ConfigurationTests
 		{
 			_options = options;
 
-			// BAD. see below: "does NOT update"
+			// BAD. see below: "old reference does NOT update via Value"
 			_value = _options.Value;
 		}
 
@@ -86,7 +86,7 @@ namespace ConfigurationTests
 			_options.Value.StringSetting.Should().Be(newString);
 			_options.Value.ListOfValues.Count.Should().Be(3);
 
-			// old reference does NOT update via Value
+			// BAD. old reference does NOT update via Value
 			_value.StringSetting.Should().Be(origString);
 			_value.ListOfValues.Count.Should().Be(2);
 
@@ -106,9 +106,9 @@ namespace ConfigurationTests
 
 	public class WritableOptions<T> : IWritableOptions<T> where T : class, new()
 	{
-		private readonly IOptionsMonitor<T> _options;
-		private readonly string _section;
-		private readonly string _file;
+		private IOptionsMonitor<T> _options { get; }
+		private string _section { get; }
+		private string _file { get; }
 
 		public WritableOptions(
 			IOptionsMonitor<T> options,
